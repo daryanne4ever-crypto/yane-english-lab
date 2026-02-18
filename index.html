@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning Lab</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Welcome to the English Learning Lab!</h1>
+        <div id="login-container">
+            <input type="text" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button id="login-button">Login</button>
+        </div>
+        <div id="speech-container">
+            <button id="start-recording">Start Speech Recognition</button>
+            <h2>Your Speech Recognition Result:</h2>
+            <p id="result"></p>
+        </div>
+        <div id="ranking-container">
+            <h2>Real-time Firebase Ranking</h2>
+            <ul id="rankings"></ul>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
