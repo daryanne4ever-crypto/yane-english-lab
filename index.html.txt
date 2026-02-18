@@ -4,24 +4,232 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yane English Lab</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS UNIFICADO */
+        :root {
+            --primary: #2563eb;
+            --secondary: #22c55e;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container { 
+            width: 95%; 
+            max-width: 450px; 
+            text-align: center; 
+        }
+
+        header h1 { font-weight: 800; margin-bottom: 5px; }
+        header h1 span { color: var(--primary); }
+        #user-greeting { font-weight: 600; color: var(--primary); margin-bottom: 20px; }
+
+        .card {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+        }
+
+        .btn-mic {
+            background: var(--danger);
+            color: white;
+            width: 100%;
+            padding: 18px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button:active { transform: scale(0.96); }
+
+        .output-container {
+            margin-top: 25px;
+            text-align: left;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .output-container label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #64748b;
+        }
+
+        #speech-output {
+            margin: 10px 0 0 0;
+            font-style: italic;
+            min-height: 24px;
+        }
+
+        .badge {
+            background: #dbeafe;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Yane English Lab</h1>
 
-    <div id="login-section">
-        <input type="text" id="username" placeholder="Your name">
-        <button onclick="login()">Enter</button>
-    </div>
+    <main class="container">
+        <header>
+            <h1>Yane <span>English Lab</span></h1>
+            <p id="user-greeting"></p>
+        </header>
 
-    <div id="activity-section" style="display:none;">
-        <h2>Telling About Yourself</h2>
-        <p>Click "Start Speaking" and tell us about yourself in English!</p>
-        <button id="start-btn">Start Speaking</button>
-        <p id="speech-output"></p>
-    </div>
+        <section id="login-section" class="card">
+            <h2>Welcome! 👋</h2>
+            <p>What is your name to start the practice?</p>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Type your name here...">
+                <button onclick="login()" class="btn-primary">Enter Lab</button>
+            </div>
+        </section>
 
-    <script src="app.js"></script>
+        <section id="activity-section" class="card" style="display:none;">
+            <div>
+                <span class="badge">Activity 01</span>
+                <h2 style="margin-top: 10px;">About You</h2>
+            </div>
+            
+            <p>Click the button and tell us: <br><strong>"What's your name and how are you?"</strong></p>
+            
+            <button id="start-btn" class="btn-mic">
+                <span id="mic-icon">🎤</span>
+                <span id="btn-text">Start Speaking</span>
+            </button>
+
+            <div class="output-container">
+                <label>Transcription</label>
+                <p id="speech-output">Waiting for your voice...</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // JAVASCRIPT UNIFICADO
+        function login() {
+            const user = document.getElementById('username').value;
+            if (user.trim() === "") {
+                alert("Please, tell us your name first!");
+                return;
+            }
+
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('activity-section').style.display = 'block';
+            document.getElementById('user-greeting').innerText = `Hello, ${user}! Ready to practice?`;
+        }
+
+        // Web Speech API
+        const startBtn = document.getElementById('start-btn');
+        const btnText = document.getElementById('btn-text');
+        const micIcon = document.getElementById('mic-icon');
+        const output = document.getElementById('speech-output');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US'; 
+            recognition.interimResults = false;
+
+            startBtn.addEventListener('click', () => {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.log("Recognition already started");
+                }
+            });
+
+            recognition.onstart = () => {
+                btnText.innerText = "Listening...";
+                startBtn.style.background = "#22c55e"; // Green
+                micIcon.innerText = "⭕"; // Indicador de gravando
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                output.innerText = `"${transcript}"`;
+                output.style.color = "#1e293b";
+                output.style.fontStyle = "normal";
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+                resetButton();
+            };
+
+            recognition.onerror = (err) => {
+                resetButton();
+                if(err.error !== 'no-speech') {
+                    output.innerText = "Error: " + err.error;
+                }
+            };
+
+            function resetButton() {
+                btnText.innerText = "Start Speaking";
+                startBtn.style.background = "#ef4444"; // Red
+                micIcon.innerText = "🎤";
+            }
+
+        } else {
+            output.innerText = "Sorry, your browser does not support voice recognition. Try Chrome or Edge.";
+        }
+    </script>
 </body>
 </html>
