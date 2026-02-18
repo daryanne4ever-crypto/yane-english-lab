@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yane English Lab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <h1>Welcome to Yane English Lab</h1>
+
+    <div id="login-section">
+        <input type="text" id="username" placeholder="Your name">
+        <button onclick="login()">Enter</button>
+    </div>
+
+    <div id="activity-section" style="display:none;">
+        <h2>Telling About Yourself</h2>
+        <p>Click "Start Speaking" and tell us about yourself in English!</p>
+        <button id="start-btn">Start Speaking</button>
+        <p id="speech-output"></p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

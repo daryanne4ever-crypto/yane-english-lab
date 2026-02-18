@@ -1,0 +1,26 @@
+function login() {
+    const username = document.getElementById('username').value;
+    if (username) {
+        alert('Welcome, ' + username + '!');
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('activity-section').style.display = 'block';
+    } else {
+        alert('Please enter your name.');
+    }
+}
+
+// Speech Recognition
+const startBtn = document.getElementById('start-btn');
+const output = document.getElementById('speech-output');
+
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'en-US';
+
+startBtn.addEventListener('click', () => {
+    recognition.start();
+});
+
+recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    output.innerText = transcript;
+};
